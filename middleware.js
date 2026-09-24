@@ -3,6 +3,7 @@
 export const config = { matcher: '/:path*' };
 
 const COOKIE = 'daakye_auth';
+const FLASH = 'daakye_login_failed'; // one-shot marker so the error shows once, not on every reload
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 async function token(password) {
@@ -47,12 +48,20 @@ export default async function middleware(request) {
         headers: { Location: '/', 'Set-Cookie': `${COOKIE}=${expected}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax` },
       });
     }
-    return loginPage(true, password);
+    // Redirect instead of rendering, so reload/back never replays the failed POST.
+    return new Response(null, {
+      status: 303,
+      headers: { Location: '/', 'Set-Cookie': `${FLASH}=1; Path=/; Max-Age=60; HttpOnly; Secure; SameSite=Lax` },
+    });
   }
+
+  if (url.pathname === '/login') return new Response(null, { status: 303, headers: { Location: '/' } });
 
   if (safeEqual(readCookie(request, COOKIE), expected)) return; // authenticated: serve the site
 
-  return loginPage(false, password);
+  const page = loginPage(readCookie(request, FLASH) === '1', password);
+  page.headers.append('Set-Cookie', `${FLASH}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`);
+  return page;
 }
 
 function loginPage(failed, password) {
