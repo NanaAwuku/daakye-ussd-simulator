@@ -75,18 +75,18 @@ function loginPage(failed, password) {
 <title>Daakye USSD Simulator</title>
 <style>
   :root {
-    --bg: #f5f6f8; --card: #ffffff; --fg: #1a1c1f; --muted: #6b7079;
-    --border: #dfe2e7; --accent: #1f6feb; --accent-fg: #ffffff; --error: #c62828;
+    --bg: #edf3ef; --card: #ffffff; --fg: #172b29; --muted: #5b6f68;
+    --border: #cad9d0; --accent: #175a40; --accent-fg: #ffffff; --error: #a12d21;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #141414; --card: #1f1f1f; --fg: #f2f2f2; --muted: #9a9ea6;
-      --border: #333333; --accent: #4c8dff; --accent-fg: #0d0d0d; --error: #ff6b64;
+      --bg: #152523; --card: #22342f; --fg: #e6efed; --muted: #9fb5ab;
+      --border: #425b4d; --accent: #b4dfbd; --accent-fg: #173625; --error: #ffb7aa;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #141414; --card: #1f1f1f; --fg: #f2f2f2; --muted: #9a9ea6;
-    --border: #333333; --accent: #4c8dff; --accent-fg: #0d0d0d; --error: #ff6b64;
+    --bg: #152523; --card: #22342f; --fg: #e6efed; --muted: #9fb5ab;
+    --border: #425b4d; --accent: #b4dfbd; --accent-fg: #173625; --error: #ffb7aa;
   }
   * { box-sizing: border-box; }
   body {
