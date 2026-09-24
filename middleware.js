@@ -59,13 +59,12 @@ export default async function middleware(request) {
 
   if (safeEqual(readCookie(request, COOKIE), expected)) return; // authenticated: serve the site
 
-  const page = loginPage(readCookie(request, FLASH) === '1', password);
+  const page = loginPage(readCookie(request, FLASH) === '1');
   page.headers.append('Set-Cookie', `${FLASH}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`);
   return page;
 }
 
-function loginPage(failed, password) {
-  const shown = password.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+function loginPage(failed) {
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -100,12 +99,7 @@ function loginPage(failed, password) {
   }
   .brand { font-weight: 700; letter-spacing: .08em; font-size: 13px; color: var(--accent); }
   h1 { font-size: 20px; margin: 6px 0 4px; }
-  p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
-  .hint {
-    margin: 0 0 20px; padding: 10px 12px; font-size: 14px; color: var(--fg);
-    background: var(--bg); border: 1px dashed var(--border); border-radius: 8px;
-  }
-  .hint code { font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
+  p { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
   label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
   input {
     width: 100%; padding: 11px 12px; font: inherit; color: var(--fg); background: var(--bg);
@@ -125,7 +119,6 @@ function loginPage(failed, password) {
   <div class="brand">DAAKYE</div>
   <h1>USSD Simulator</h1>
   <p>Enter the password to view this demo.</p>
-  <div class="hint">Password: <code>${shown}</code></div>
   <label for="password">Password</label>
   <input id="password" name="password" type="password" autocomplete="current-password" required autofocus${failed ? ' aria-describedby="err"' : ''}>
   ${failed ? '<div id="err" class="error" role="alert">Incorrect password. Try again.</div>' : ''}
